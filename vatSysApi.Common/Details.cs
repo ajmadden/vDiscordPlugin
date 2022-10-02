@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace vatSysApi.Common
 {
@@ -12,6 +11,7 @@ namespace vatSysApi.Common
         public int TxSent { get; set; }
         public int AcftSpotted { get; set; }
         public List<Frequency> Frequencies { get; set; } = new List<Frequency>();
+        public string[] ATIS { get; set; }
 
         public void Connect()
         {
@@ -27,6 +27,12 @@ namespace vatSysApi.Common
             TxSent = 0;
             TxRecd = 0;
             StartUtc = null;
+            SetATIS();
+        }
+
+        public void SetATIS(string[] atis = null)
+        {
+            ATIS = atis;
         }
     }
 }

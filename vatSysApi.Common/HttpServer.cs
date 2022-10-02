@@ -90,6 +90,11 @@ namespace vatSysApi.Common
             FDP2.SetASSR(fdr, requestedCode);
         }
 
+        public void ATIS(string[] atis = null)
+        {
+            _details.SetATIS(atis);
+        }
+
         public void FreqClear()
         {
             _details.Frequencies.Clear();
@@ -97,6 +102,7 @@ namespace vatSysApi.Common
 
         public void FreqAdd(VSCSFrequency freq)
         {
+            if (_details.Frequencies.Any(x => x.Name == freq.Name)) return;
             _details.Frequencies.Add(new Frequency(freq));
         }
 

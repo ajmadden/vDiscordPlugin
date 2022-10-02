@@ -53,10 +53,6 @@ namespace Discord.App
             {
                 Console.WriteLine($"ERROR: {ex.Message}");
             }
-            finally
-            {
-                _discord.Dispose();
-            }
 
             async void OnTimedEvent(object source, ElapsedEventArgs e)
             {

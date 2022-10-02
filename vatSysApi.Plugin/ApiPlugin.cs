@@ -34,6 +34,18 @@ namespace RemoteVSCSPlugin
             Audio.VSCSFrequenciesChanged += Audio_VSCSFrequenciesChanged;
             Network.Connected += Network_Connected;
             Network.Disconnected += Network_Disconnected;
+            Network.ATISConnected += Network_ATISConnected;
+            Network.ATISDisconnected += Network_ATISDisconnected;
+        }
+
+        private void Network_ATISDisconnected(object sender, EventArgs e)
+        {
+            _httpServer.ATIS();
+        }
+
+        private void Network_ATISConnected(object sender, EventArgs e)
+        {
+            _httpServer.ATIS(Network.Me.ATIS);
         }
 
         private void StartDiscordApp()

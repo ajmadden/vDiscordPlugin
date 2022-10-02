@@ -12,11 +12,12 @@ namespace vatSysApi.Common
             assigned = fdr.AssignedSSRCode;
         }
 
-        private int assigned { get; set; } = -1;
+        private int assigned { get; set; } = 0;
         public string Assigned
         {
             get
             {
+                if (assigned == 0) return null;
                 return ToString(assigned);
             }
             set
@@ -24,7 +25,7 @@ namespace vatSysApi.Common
                 assigned = ToInt(value);
             }
         }
-        private int actual { get; set; } = -1;
+        private int actual { get; set; } = 0;
         public string Actual
         {
             get
@@ -36,16 +37,24 @@ namespace vatSysApi.Common
                 actual = ToInt(value);
             }
         }
-        public bool Correct
+        public bool IsCorrect
         {
             get
             {
-                if (assigned == -1 && actual != -1) return true;
+                if (assigned == 0 && actual != 0) return true;
                 if (assigned == actual) return true;
                 return false;
             }
         }
-        public bool ModeC { get; set; }
+        public bool IsAssigned
+        {
+            get
+            {
+                if (assigned == 0) return false;
+                return true;
+            }
+        }
+        public bool IsModeC { get; set; }
 
         public void FDRUpdate(FDP2.FDR updated)
         {
@@ -55,7 +64,7 @@ namespace vatSysApi.Common
         public void RadarUpdate(RDP.RadarTrack updated)
         {
             actual = updated.ActualAircraft.TransponderCode;
-            ModeC = updated.ActualAircraft.TransponderModeC;
+            IsModeC = updated.ActualAircraft.TransponderModeC;
         }
 
         private int ToInt(string input)
@@ -64,12 +73,12 @@ namespace vatSysApi.Common
             {
                 return Convert.ToInt32(input, 8);
             }
-            catch { return -1; }
+            catch { return 0; }
         }
 
         private string ToString(int input)
         {
-            if (input == -1) return null;
+            if (input == 0) return null;
             return Convert.ToString(input, 8);
         }
     }
