@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Timers;
 using vatsys;
 using vatsys.Plugin;
 using vatSysApi.Common;
@@ -25,8 +28,6 @@ namespace RemoteVSCSPlugin
 
         public ApiPlugin()
         {
-            StartDiscordApp();
-
             _cancellationToken = new CancellationTokenSource();
             _httpServer = new HttpServer(_apiPort, _cancellationToken.Token);
 
@@ -36,6 +37,22 @@ namespace RemoteVSCSPlugin
             Network.Disconnected += Network_Disconnected;
             Network.ATISConnected += Network_ATISConnected;
             Network.ATISDisconnected += Network_ATISDisconnected;
+
+            var _timer = new System.Timers.Timer();
+            _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            _timer.Interval = TimeSpan.FromSeconds(5).TotalMilliseconds;
+            _timer.Enabled = true;
+            _timer.Start();
+        }
+
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            if (Process.GetProcessesByName("vatSysAi.Discord.exe").Any())
+            {
+                return;
+            }
+            
+            StartDiscordApp();
         }
 
         private void Network_ATISDisconnected(object sender, EventArgs e)
@@ -48,13 +65,13 @@ namespace RemoteVSCSPlugin
             _httpServer.ATIS(Network.Me.ATIS);
         }
 
-        private void StartDiscordApp()
+        private static void StartDiscordApp()
         {
             var fileName = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}{_discordAppFile}";
 
             if (!new FileInfo(fileName).Exists) return;
 
-            System.Diagnostics.Process.Start(fileName);
+            Process.Start(fileName);
         }
 
         private void Network_Connected(object sender, EventArgs e)

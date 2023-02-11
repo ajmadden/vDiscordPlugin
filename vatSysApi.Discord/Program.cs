@@ -24,82 +24,88 @@ namespace Discord.App
 
         static void Main()
         {
-            if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
-            {
-                Environment.Exit(0);
-            }
-
-            try
-            {
-                _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
-
-                _activityManager = _discord.GetActivityManager();
-
-                CheckVatsys();
-
-                var _timer = new System.Timers.Timer();
-                _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                _timer.Interval = TimeSpan.FromSeconds(_apiSeconds).TotalMilliseconds;
-                _timer.Enabled = true;
-                _timer.Start();
-
-                while (true)
-                {
-                    _discord.RunCallbacks();
-                    Thread.Sleep(1000 / 60);
-                }
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine($"ERROR: {ex.Message}");
-            }
-
-            async void OnTimedEvent(object source, ElapsedEventArgs e)
+            while (true)
             {
                 try
                 {
-                    var response = await _client.GetStringAsync(_apiUri);
-
-                    var details = JsonConvert.DeserializeObject<Details>(response);
-
-                    if (!details.Connected)
+                    if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
                     {
-                        _activityManager.ClearActivity(result => { });
-                        return;
+                        Environment.Exit(0);
                     }
 
-                    var status = new vatSysApi.Common.Status(details);
+                    _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
 
-                    _activityManager.UpdateActivity(new Activity
-                    {
-                        Details = status.Title,
-                        State = status.Subtitle,
-                        Timestamps =
-                    {
-                        Start = ConvertToUnixTimestamp(status.Details.StartUtc.Value)
-                    },
-                        Assets = {
-                        LargeImage = "68678556"
-                    },
-                        Instance = true,
-                    }, result => { });
+                    _activityManager = _discord.GetActivityManager();
 
+                    CheckVatsys();
+
+                    var _timer = new System.Timers.Timer();
+                    _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    _timer.Interval = TimeSpan.FromSeconds(_apiSeconds).TotalMilliseconds;
+                    _timer.Enabled = true;
+                    _timer.Start();
+
+                    while (true)
+                    {
+                        _discord.RunCallbacks();
+                        Thread.Sleep(1000 / 60);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"ERROR: {ex.Message}");
                 }
+                finally
+                {
+                    _discord.Dispose();
+                }
             }
+        }
 
-            void CheckVatsys()
+        private static async void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            try
             {
-                var vatsysProcess = Process.GetProcessesByName(_vatsysProcessName);
+                var response = await _client.GetStringAsync(_apiUri);
 
-                if (vatsysProcess.Length == 0) Environment.Exit(0);
+                var details = JsonConvert.DeserializeObject<Details>(response);
 
-                ProcessMonitor.MonitorForExit(vatsysProcess[0]);
+                if (!details.Connected)
+                {
+                    _activityManager.ClearActivity(result => { });
+                    return;
+                }
+
+                var status = new vatSysApi.Common.Status(details);
+
+                _activityManager.UpdateActivity(new Activity
+                {
+                    Details = status.Title,
+                    State = status.Subtitle,
+                    Timestamps =
+                    {
+                        Start = ConvertToUnixTimestamp(status.Details.StartUtc.Value)
+                    },
+                    Assets = {
+                        LargeImage = "68678556"
+                    },
+                    Instance = true,
+                }, result => { });
+
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+            }
+        }
 
+        private static void CheckVatsys()
+        {
+            var vatsysProcess = Process.GetProcessesByName(_vatsysProcessName);
+
+            if (vatsysProcess.Length == 0) Environment.Exit(0);
+
+            ProcessMonitor.MonitorForExit(vatsysProcess[0]);
         }
 
         private static long ConvertToUnixTimestamp(DateTime date)
