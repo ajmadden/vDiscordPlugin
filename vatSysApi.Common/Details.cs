@@ -1,38 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace vatSysApi.Common
+namespace DiscordPlugin.Common
 {
     public class Details
     {
-        public bool Connected { get; set; }
+        public bool Connected => StartUtc.HasValue;
         public DateTime? StartUtc { get; set; }
+        public string Callsign { get; set; }
         public int TxRecd { get; set; }
         public int TxSent { get; set; }
-        public int AcftSpotted { get; set; }
+        public int AcftSpotted => AircraftSpotted.Count;
+        public int AcftControlled => AircraftControlled.Count;
         public List<Frequency> Frequencies { get; set; } = new List<Frequency>();
-        public string[] ATIS { get; set; }
+        public List<string> AircraftSpotted { get; set; } = new List<string>();
+        public List<string> AircraftControlled { get; set; } = new List<string>();
+        public DisplayType DisplayType { get; set; } = DisplayType.AcftSpotted;
+        public bool Debug { get; set; }
 
-        public void Connect()
+        public void Connect(string callsign)
         {
-            Connected = true;
             StartUtc = DateTime.UtcNow;
+            Callsign = callsign;
         }
 
         public void Disconnect()
         {
-            Connected = false;
+            StartUtc = null;
             Frequencies.Clear();
-            AcftSpotted = 0;
+            AircraftSpotted.Clear();
+            AircraftControlled.Clear();
             TxSent = 0;
             TxRecd = 0;
-            StartUtc = null;
-            SetATIS();
-        }
-
-        public void SetATIS(string[] atis = null)
-        {
-            ATIS = atis;
         }
     }
 }

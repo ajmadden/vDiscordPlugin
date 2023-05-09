@@ -7,8 +7,8 @@
     <ProjectGuid>{0DDF31C8-723A-49C3-9583-59890DE4C596}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>vatSysApi.Plugin</RootNamespace>
-    <AssemblyName>vatSysApi.Plugin</AssemblyName>
+    <RootNamespace>DiscordPlugin.Plugin</RootNamespace>
+    <AssemblyName>DiscordPlugin.Plugin</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Documents\vatSys Files\Profiles\Australia\Plugins\Api\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\Program Files %28x86%29\vatSys\bin\Plugins\Discord\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Documents\vatSys Files\Profiles\Australia\Plugins\Api\</OutputPath>
+    <OutputPath>..\..\..\..\Documents\vatSys Files\Profiles\Australia\Plugins\Discord\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -80,6 +80,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,7 +93,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiPlugin.cs" />
+    <Compile Include="DiscordPlugin.cs" />
+    <Compile Include="DiscordWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="DiscordWindow.Designer.cs">
+      <DependentUpon>DiscordWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -99,10 +108,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vatSysApi.Common\vatSysApi.Common.csproj">
+    <ProjectReference Include="..\vatSysApi.Common\DiscordPlugin.Common.csproj">
       <Project>{691F6209-91EA-49BF-B44C-CEA52BF81CC8}</Project>
-      <Name>vatSysApi.Common</Name>
+      <Name>DiscordPlugin.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DiscordWindow.resx">
+      <DependentUpon>DiscordWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

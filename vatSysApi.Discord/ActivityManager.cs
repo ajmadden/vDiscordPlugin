@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Discord
+namespace DiscordPlugin
 {
     public partial class ActivityManager
     {

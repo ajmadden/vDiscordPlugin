@@ -9,10 +9,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="vatSys">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\vatSys\bin\vatSys.exe</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

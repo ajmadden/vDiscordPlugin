@@ -5,9 +5,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E51817FF-6BA8-45AB-A1CE-93722D114349}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>vatSysApi.Discord</RootNamespace>
-    <AssemblyName>vatSysApi.Discord</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DiscordPlugin.Discord</RootNamespace>
+    <AssemblyName>DiscordPlugin.Discord</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,7 +35,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Documents\vatSys Files\Discord\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\Program Files %28x86%29\vatSys\bin\Plugins\Discord\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -140,20 +140,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="discord_game_sdk.dll.lib">
+    <None Include="discord_game_sdk.d.lib">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="discord_game_sdk.dll">
+    <None Include="discord_game_sdk.d">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vatSysApi.Common\vatSysApi.Common.csproj">
+    <ProjectReference Include="..\vatSysApi.Common\DiscordPlugin.Common.csproj">
       <Project>{691f6209-91ea-49bf-b44c-cea52bf81cc8}</Project>
-      <Name>vatSysApi.Common</Name>
+      <Name>DiscordPlugin.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

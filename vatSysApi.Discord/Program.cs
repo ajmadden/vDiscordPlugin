@@ -4,14 +4,15 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Timers;
-using vatSysApi.Common;
+using DiscordPlugin.Common;
+using System.Runtime.InteropServices;
 
-namespace Discord.App
+namespace DiscordPlugin.App
 {
     internal class Program
     {
         private static readonly int _apiPort = 45341;
-        private static readonly string _apiUri = $"http://localhost:{_apiPort}/Details";
+        private static readonly string _apiUri = $"http://localhost:{_apiPort}";
         private static readonly double _apiSeconds = 1;
 
         private static readonly string _vatsysProcessName = $@"vatSys";
@@ -20,46 +21,80 @@ namespace Discord.App
         private static ActivityManager _activityManager;
         private static readonly string _clientID = "1002630602538889387";
 
+        private static bool _windowShown = false;
+
         private static readonly HttpClient _client = new HttpClient();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+        const int SW_MINIMIZED = 2;
 
         static void Main()
         {
-            while (true)
+            HideConsoleWindow();
+
+            try
             {
-                try
+                if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
                 {
-                    if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
-                    {
-                        Environment.Exit(0);
-                    }
-
-                    _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
-
-                    _activityManager = _discord.GetActivityManager();
-
-                    CheckVatsys();
-
-                    var _timer = new System.Timers.Timer();
-                    _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                    _timer.Interval = TimeSpan.FromSeconds(_apiSeconds).TotalMilliseconds;
-                    _timer.Enabled = true;
-                    _timer.Start();
-
-                    while (true)
-                    {
-                        _discord.RunCallbacks();
-                        Thread.Sleep(1000 / 60);
-                    }
+                    Environment.Exit(0);
                 }
-                catch (Exception ex)
+
+                _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
+
+                _activityManager = _discord.GetActivityManager();
+
+                CheckVatsys();
+
+                var _timer = new System.Timers.Timer();
+                _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                _timer.Interval = TimeSpan.FromSeconds(_apiSeconds).TotalMilliseconds;
+                _timer.Enabled = true;
+                _timer.Start();
+
+                while (true)
                 {
-                    Console.WriteLine($"ERROR: {ex.Message}");
-                }
-                finally
-                {
-                    _discord.Dispose();
+                    Thread.Sleep(TimeSpan.FromSeconds(_apiSeconds));
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+            }
+            finally
+            {
+                _discord.Dispose();
+            }
+        }
+
+        public static void ShowConsoleWindow()
+        {
+            var handle = GetConsoleWindow();
+
+            if (handle == IntPtr.Zero)
+            {
+                AllocConsole();
+            }
+            else
+            {
+                ShowWindow(handle, SW_SHOW);
+            }
+        }
+
+        public static void HideConsoleWindow()
+        {
+            var handle = GetConsoleWindow();
+            ShowWindow(handle, SW_MINIMIZED);
+            ShowWindow(handle, SW_HIDE);
         }
 
         private static async void OnTimedEvent(object source, ElapsedEventArgs e)
@@ -70,28 +105,47 @@ namespace Discord.App
 
                 var details = JsonConvert.DeserializeObject<Details>(response);
 
-                if (!details.Connected)
+                if (details.Debug && !_windowShown)
                 {
-                    _activityManager.ClearActivity(result => { });
-                    return;
+                    _windowShown = true;
+                    ShowConsoleWindow();
+                }
+                else if (!details.Debug && _windowShown)
+                {
+                    _windowShown = false;
+                    HideConsoleWindow();
                 }
 
-                var status = new vatSysApi.Common.Status(details);
+                await Console.Out.WriteLineAsync(response);
 
-                _activityManager.UpdateActivity(new Activity
+                if (!details.Connected)
                 {
-                    Details = status.Title,
-                    State = status.Subtitle,
-                    Timestamps =
+                    _activityManager.ClearActivity(result => {
+                        Console.WriteLine("Update Activity {0}", result);
+                    });
+                }
+                else
+                {
+                    var status = new Common.Status(details);
+
+                    _activityManager.UpdateActivity(new Activity
+                    {
+                        Details = status.Title,
+                        State = status.Subtitle,
+                        Timestamps =
                     {
                         Start = ConvertToUnixTimestamp(status.Details.StartUtc.Value)
                     },
-                    Assets = {
+                        Assets = {
                         LargeImage = "68678556"
                     },
-                    Instance = true,
-                }, result => { });
+                        Instance = true,
+                    }, result => {
+                        Console.WriteLine("Update Activity {0}", result);
+                    });
+                }
 
+                _discord.RunCallbacks();
             }
             catch (Exception ex)
             {
