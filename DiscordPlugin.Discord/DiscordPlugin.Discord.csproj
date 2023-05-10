@@ -151,7 +151,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vatSysApi.Common\DiscordPlugin.Common.csproj">
+    <ProjectReference Include="..\DiscordPlugin.Common\DiscordPlugin.Common.csproj">
       <Project>{691f6209-91ea-49bf-b44c-cea52bf81cc8}</Project>
       <Name>DiscordPlugin.Common</Name>
     </ProjectReference>
