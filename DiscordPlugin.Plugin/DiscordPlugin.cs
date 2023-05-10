@@ -11,6 +11,8 @@ using vatsys.Plugin;
 using DiscordPlugin.Common;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace DiscordPlugin.Plugin
 {
@@ -18,7 +20,10 @@ namespace DiscordPlugin.Plugin
     public class DiscordPlugin : IPlugin
     {
         public string Name => "Discord";
+
+        private static readonly PluginVersion Version = new PluginVersion(1, 1);
         private static string FileName => $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
+        private static string VersionUrl => "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 
         private static readonly string _discordAppName = "DiscordPlugin.Discord";
         private static readonly string _discordAppFile = $"{_discordAppName}.exe";
@@ -26,6 +31,8 @@ namespace DiscordPlugin.Plugin
         private static HttpServer _httpServer;
         private static CancellationTokenSource _cancellationToken;
         private static readonly int _apiPort = 45341;
+
+        private static HttpClient _httpClient = new HttpClient();
 
         private static readonly List<VSCSFrequency> _vscsFreqs = new List<VSCSFrequency>();
 
@@ -57,6 +64,8 @@ namespace DiscordPlugin.Plugin
             _timer.Interval = TimeSpan.FromSeconds(5).TotalMilliseconds;
             _timer.Enabled = true;
             _timer.Start();
+
+            _ = CheckVersion();
         }
 
         private void DiscordMenu_Click(object sender, EventArgs e)
@@ -97,6 +106,21 @@ namespace DiscordPlugin.Plugin
             if (!new FileInfo(file).Exists) return;
 
             Process.Start(file);
+        }
+
+        private static async Task CheckVersion()
+        {
+            try
+            {
+                var response = await _httpClient.GetStringAsync(VersionUrl);
+
+                var version = JsonConvert.DeserializeObject<PluginVersion>(response);
+
+                if (version.Major == Version.Major && version.Minor == Version.Minor) return;
+
+                Errors.Add(new Exception("A new version of the plugin is available."), "Discord");
+            }
+            catch { }
         }
 
         public static void LoadSettings()
