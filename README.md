@@ -4,15 +4,16 @@ A Discord presence plugin for [vatSys](https://virtualairtrafficsystem.com/).
 
 #### Installation
 
-The plugin should be placed in the base vatSys plugins directory: "[...]\Program Files (x86)\vatSys\bin\Plugins".
-
-Verify it has been installed by checking "Info > About" in vatSys.
+1. Download the plugin [here](https://github.com/badvectors/DiscordPlugin/releases/download/release/DiscordPlugin1.0.zip).
+2. **Right click on the zip file and select "Unblock".**
+3. Unzip the file and copy to the base vatSys plugins directory: "[...]\Program Files (x86)\vatSys\bin\Plugins".
+4. Verify it has been installed in vatSys by checking "Info > About".
 
 #### How to use
 
 The first line will shown the primary frequency being transmitted or observed.
 
-The second line  be chaged in vatsys in "Settings > Discord".  The options are:
+The second line  be chaged in vatsys in "Settings > Discord" - the options are:
 - None: Only the time online will be displayed.
 - Aircraft Spotted: The number of unique aircraft that have been spotted. 
 - Aircraft Controlled: The number of unique aircraft that have been in your jurisdiction.
