@@ -13,7 +13,7 @@ A Discord presence plugin for [vatSys](https://virtualairtrafficsystem.com/).
 
 The first line will shown the primary frequency being transmitted or observed.
 
-The second line  be chaged in vatsys in "Settings > Discord".  The options are:
+The second line  be chaged in vatsys in "Settings > Discord" - the options are:
 - None: Only the time online will be displayed.
 - Aircraft Spotted: The number of unique aircraft that have been spotted. 
 - Aircraft Controlled: The number of unique aircraft that have been in your jurisdiction.
