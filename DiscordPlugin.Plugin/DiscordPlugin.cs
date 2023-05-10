@@ -21,7 +21,7 @@ namespace DiscordPlugin.Plugin
     {
         public string Name => "Discord";
 
-        private static readonly PluginVersion Version = new PluginVersion(1, 1);
+        private static readonly PluginVersion Version = new PluginVersion(1, 0);
         private static string FileName => $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
         private static string VersionUrl => "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 
