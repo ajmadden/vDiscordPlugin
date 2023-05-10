@@ -118,7 +118,7 @@ namespace DiscordPlugin.Plugin
 
                 if (version.Major == Version.Major && version.Minor == Version.Minor) return;
 
-                Errors.Add(new Exception("A new version of the plugin is available."), "Discord");
+                Errors.Add(new Exception("A new version of the plugin is available."), "Discord Plugin");
             }
             catch { }
         }
