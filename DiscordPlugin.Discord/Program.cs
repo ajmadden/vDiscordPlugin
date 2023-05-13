@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Timers;
 using DiscordPlugin.Common;
-using System.Runtime.InteropServices;
 
 namespace DiscordPlugin.App
 {
@@ -21,27 +20,10 @@ namespace DiscordPlugin.App
         private static ActivityManager _activityManager;
         private static readonly string _clientID = "1002630602538889387";
 
-        private static bool _windowShown = false;
-
         private static readonly HttpClient _client = new HttpClient();
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AllocConsole();
-
-        [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
-        const int SW_MINIMIZED = 2;
 
         static void Main()
         {
-            HideConsoleWindow();
-
             try
             {
                 if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
@@ -76,27 +58,6 @@ namespace DiscordPlugin.App
             }
         }
 
-        public static void ShowConsoleWindow()
-        {
-            var handle = GetConsoleWindow();
-
-            if (handle == IntPtr.Zero)
-            {
-                AllocConsole();
-            }
-            else
-            {
-                ShowWindow(handle, SW_SHOW);
-            }
-        }
-
-        public static void HideConsoleWindow()
-        {
-            var handle = GetConsoleWindow();
-            ShowWindow(handle, SW_MINIMIZED);
-            ShowWindow(handle, SW_HIDE);
-        }
-
         private static async void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             try
@@ -104,17 +65,6 @@ namespace DiscordPlugin.App
                 var response = await _client.GetStringAsync(_apiUri);
 
                 var details = JsonConvert.DeserializeObject<Details>(response);
-
-                if (details.Debug && !_windowShown)
-                {
-                    _windowShown = true;
-                    ShowConsoleWindow();
-                }
-                else if (!details.Debug && _windowShown)
-                {
-                    _windowShown = false;
-                    HideConsoleWindow();
-                }
 
                 await Console.Out.WriteLineAsync(response);
 
