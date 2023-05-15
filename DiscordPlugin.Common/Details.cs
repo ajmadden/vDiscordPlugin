@@ -6,6 +6,7 @@ namespace DiscordPlugin.Common
     public class Details
     {
         public bool Connected => StartUtc.HasValue;
+        public bool OfficalServer { get; set; }
         public DateTime? StartUtc { get; set; }
         public string Callsign { get; set; }
         public int TxRecd { get; set; }
@@ -18,10 +19,11 @@ namespace DiscordPlugin.Common
         public DisplayType DisplayType { get; set; } = DisplayType.AcftSpotted;
         public bool Debug { get; set; }
 
-        public void Connect(string callsign)
+        public void Connect(string callsign, bool officalServer = false)
         {
             StartUtc = DateTime.UtcNow;
             Callsign = callsign;
+            OfficalServer = officalServer;
         }
 
         public void Disconnect()

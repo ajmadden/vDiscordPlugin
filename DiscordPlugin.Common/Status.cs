@@ -17,6 +17,7 @@ namespace DiscordPlugin.Common
             {
                 if (Details.Frequencies.Any(x => x.Transmit)) return Controlling;
                 else if (Details.Frequencies.Any(x => x.Receive)) return Observing;
+                else if (!Details.OfficalServer) return "In the sweat box.";
                 return None;
             }
         }

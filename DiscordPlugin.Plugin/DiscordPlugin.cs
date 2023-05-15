@@ -21,7 +21,7 @@ namespace DiscordPlugin.Plugin
     {
         public string Name => "Discord";
 
-        private static readonly PluginVersion Version = new PluginVersion(1, 0);
+        private static readonly PluginVersion Version = new PluginVersion(1, 1);
         private static string FileName => $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
         private static string VersionUrl => "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 
@@ -83,7 +83,7 @@ namespace DiscordPlugin.Plugin
                 }
                 else if (DiscordWindow.Visible) return;
 
-                DiscordWindow.ShowDialog();
+                DiscordWindow.Show();
             });
         }
 
@@ -149,7 +149,7 @@ namespace DiscordPlugin.Plugin
 
         private void Network_Connected(object sender, EventArgs e)
         {
-            Details.Connect(Network.Me.Callsign);
+            Details.Connect(Network.Me.Callsign, Network.IsOfficialServer);
         }
 
         private void Network_Disconnected(object sender, EventArgs e)

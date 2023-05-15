@@ -35,7 +35,7 @@
             // 
             // comboBoxDisplay
             // 
-            this.comboBoxDisplay.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.comboBoxDisplay.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDisplay.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.comboBoxDisplay.FormattingEnabled = true;
@@ -47,7 +47,7 @@
             "Aircraft Spotted",
             "None"});
             this.comboBoxDisplay.Location = new System.Drawing.Point(16, 31);
-            this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDisplay.Name = "comboBoxDisplay";
             this.comboBoxDisplay.Size = new System.Drawing.Size(255, 25);
             this.comboBoxDisplay.TabIndex = 1;
@@ -69,13 +69,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
-            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(284, 72);
             this.Controls.Add(this.labelDisplay);
             this.Controls.Add(this.comboBoxDisplay);
+            this.ForeColor = System.Drawing.SystemColors.InfoText;
             this.HasMinimizeButton = false;
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximumSize = new System.Drawing.Size(288, 100);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(288, 100);

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Timers;
 using DiscordPlugin.Common;
+using System.ComponentModel.Design;
 
 namespace DiscordPlugin.App
 {
@@ -22,6 +23,9 @@ namespace DiscordPlugin.App
 
         private static readonly HttpClient _client = new HttpClient();
 
+        private static readonly System.Timers.Timer _timer = new System.Timers.Timer();
+
+
         static void Main()
         {
             try
@@ -31,16 +35,12 @@ namespace DiscordPlugin.App
                     Environment.Exit(0);
                 }
 
-                _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
-
-                _activityManager = _discord.GetActivityManager();
+                ConnectToDiscord();
 
                 CheckVatsys();
 
-                var _timer = new System.Timers.Timer();
                 _timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
                 _timer.Interval = TimeSpan.FromSeconds(_apiSeconds).TotalMilliseconds;
-                _timer.Enabled = true;
                 _timer.Start();
 
                 while (true)
@@ -58,10 +58,19 @@ namespace DiscordPlugin.App
             }
         }
 
+        private static void ConnectToDiscord()
+        {
+            _discord = new Discord(Int64.Parse(_clientID), (UInt64)CreateFlags.Default);
+
+            _activityManager = _discord.GetActivityManager();
+        }
+
         private static async void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             try
             {
+                if (_discord == null) return;
+
                 var response = await _client.GetStringAsync(_apiUri);
 
                 var details = JsonConvert.DeserializeObject<Details>(response);
@@ -70,7 +79,8 @@ namespace DiscordPlugin.App
 
                 if (!details.Connected)
                 {
-                    _activityManager.ClearActivity(result => {
+                    _activityManager.ClearActivity(result =>
+                    {
                         Console.WriteLine("Update Activity {0}", result);
                     });
                 }
@@ -90,12 +100,18 @@ namespace DiscordPlugin.App
                         LargeImage = "68678556"
                     },
                         Instance = true,
-                    }, result => {
+                    }, result =>
+                    {
                         Console.WriteLine("Update Activity {0}", result);
                     });
                 }
 
                 _discord.RunCallbacks();
+            }
+            catch (ResultException ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+                Environment.Exit(0);
             }
             catch (Exception ex)
             {

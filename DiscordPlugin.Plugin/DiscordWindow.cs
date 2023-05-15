@@ -9,13 +9,16 @@ namespace DiscordPlugin.Plugin
         public DiscordWindow()
         {
             InitializeComponent();
+
+            BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
         }
 
         private void comboBoxDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (comboBoxDisplay.Text)
             {
-                case "None":
+                case "Time Only":
                     DiscordPlugin.Details.DisplayType = DisplayType.None;
                     break;
                 case "Transmissions Sent":
@@ -45,7 +48,7 @@ namespace DiscordPlugin.Plugin
             switch (DiscordPlugin.Details.DisplayType)
             {
                 case DisplayType.None:
-                    comboBoxDisplay.Text = "None";
+                    comboBoxDisplay.Text = "Time Only";
                     return;
                 case DisplayType.TxSent:
                     comboBoxDisplay.Text = "Transmissions Sent";
