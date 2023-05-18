@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Timers;
 using DiscordPlugin.Common;
-using System.ComponentModel.Design;
 
 namespace DiscordPlugin.App
 {

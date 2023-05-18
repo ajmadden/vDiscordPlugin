@@ -21,9 +21,9 @@ namespace DiscordPlugin.Plugin
     {
         public string Name => "Discord";
 
-        private static readonly PluginVersion Version = new PluginVersion(1, 1);
-        private static string FileName => $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
-        private static string VersionUrl => "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
+        private static readonly PluginVersion _version = new PluginVersion(1, 1);
+        private static readonly string _fileName = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
+        private static readonly string _versionUrl = "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 
         private static readonly string _discordAppName = "DiscordPlugin.Discord";
         private static readonly string _discordAppFile = $"{_discordAppName}.exe";
@@ -32,20 +32,20 @@ namespace DiscordPlugin.Plugin
         private static CancellationTokenSource _cancellationToken;
         private static readonly int _apiPort = 45341;
 
-        private static HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient();
 
         private static readonly List<VSCSFrequency> _vscsFreqs = new List<VSCSFrequency>();
 
-        private static CustomToolStripMenuItem DiscordMenu { get; set; }
-        private static DiscordWindow DiscordWindow { get; set; }
+        private static CustomToolStripMenuItem _discordMenu;
+        private static DiscordWindow _discordWindow;
 
-        public static Details Details { get; set; } = new Details();
+        public static Details Details = new Details();
 
         public DiscordPlugin()
         {
-            DiscordMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Settings, new ToolStripMenuItem("Discord"));
-            DiscordMenu.Item.Click += DiscordMenu_Click;
-            MMI.AddCustomMenuItem(DiscordMenu);
+            _discordMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Settings, new ToolStripMenuItem("Discord"));
+            _discordMenu.Item.Click += DiscordMenu_Click;
+            MMI.AddCustomMenuItem(_discordMenu);
 
             _cancellationToken = new CancellationTokenSource();
             _httpServer = new HttpServer(_apiPort, _cancellationToken.Token);
@@ -77,13 +77,13 @@ namespace DiscordPlugin.Plugin
         {
             MMI.InvokeOnGUI((MethodInvoker)delegate () 
             {
-                if (DiscordWindow == null || DiscordWindow.IsDisposed)
+                if (_discordWindow == null || _discordWindow.IsDisposed)
                 {
-                    DiscordWindow = new DiscordWindow();
+                    _discordWindow = new DiscordWindow();
                 }
-                else if (DiscordWindow.Visible) return;
+                else if (_discordWindow.Visible) return;
 
-                DiscordWindow.Show();
+                _discordWindow.Show();
             });
         }
 
@@ -112,11 +112,11 @@ namespace DiscordPlugin.Plugin
         {
             try
             {
-                var response = await _httpClient.GetStringAsync(VersionUrl);
+                var response = await _httpClient.GetStringAsync(_versionUrl);
 
                 var version = JsonConvert.DeserializeObject<PluginVersion>(response);
 
-                if (version.Major == Version.Major && version.Minor == Version.Minor) return;
+                if (version.Major == _version.Major && version.Minor == _version.Minor) return;
 
                 Errors.Add(new Exception("A new version of the plugin is available."), "Discord Plugin");
             }
@@ -125,12 +125,12 @@ namespace DiscordPlugin.Plugin
 
         public static void LoadSettings()
         {
-            if (!File.Exists(FileName))
+            if (!File.Exists(_fileName))
             {
                 return;
             }
 
-            string json = File.ReadAllText(FileName);
+            string json = File.ReadAllText(_fileName);
 
             var details = JsonConvert.DeserializeObject<Details>(json);
 
@@ -144,7 +144,7 @@ namespace DiscordPlugin.Plugin
 
             var json = JsonConvert.SerializeObject(settings);
 
-            File.WriteAllText(FileName, json);
+            File.WriteAllText(_fileName, json);
         }
 
         private void Network_Connected(object sender, EventArgs e)

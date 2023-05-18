@@ -45,7 +45,7 @@
             "Transmissions Both",
             "Aircraft Controlled",
             "Aircraft Spotted",
-            "None"});
+            "Time Only"});
             this.comboBoxDisplay.Location = new System.Drawing.Point(16, 31);
             this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDisplay.Name = "comboBoxDisplay";
