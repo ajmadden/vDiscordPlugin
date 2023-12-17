@@ -21,7 +21,7 @@ namespace DiscordPlugin.Plugin
     {
         public string Name => "Discord";
 
-        private static readonly Version _version = new Version(1, 1);
+        private static readonly Version _version = new Version(1, 2);
         private static readonly string _fileName = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\vatSys Files\Discord.json";
         private static readonly string _versionUrl = "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 
@@ -223,7 +223,7 @@ namespace DiscordPlugin.Plugin
                 FreqAdd(new Frequency()
                 {
                     Name = freq.Name,
-                    FriendlyName = freq.FriendlyName,
+                    FriendlyName = !string.IsNullOrWhiteSpace(freq.FriendlyName) ? freq.FriendlyName : freq.Name,
                     Hertz = (freq.Frequency / 1000000).ToString("N1"),
                     MHz = freq.Frequency,
                     IsHF = freq.IsHF,
@@ -249,7 +249,7 @@ namespace DiscordPlugin.Plugin
                 FreqAdd(new Frequency()
                 {
                     Name = freq.Name,
-                    FriendlyName = freq.FriendlyName,
+                    FriendlyName = !string.IsNullOrWhiteSpace(freq.FriendlyName) ? freq.FriendlyName : freq.Name,
                     Hertz = (freq.Frequency / 1000000).ToString("N1"),
                     MHz = freq.Frequency,
                     IsHF = freq.IsHF,
