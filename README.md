@@ -8,6 +8,7 @@ A Discord presence plugin for [vatSys](https://virtualairtrafficsystem.com/).
 2. **Right click on the zip file and select "Unblock".**
 3. Unzip the file and copy to the base vatSys plugins directory: "[...]\Program Files (x86)\vatSys\bin\Plugins".
 4. Verify it has been installed in vatSys by checking "Info > About".
+5. Ensure you have "Settings > Activity Privacy > Display current activity as a status message" turned on.
 
 #### How to use
 
