@@ -4,6 +4,9 @@ A Discord presence plugin for [vatSys](https://virtualairtrafficsystem.com/).
 
 #### Installation
 
+Can be installed using the [plugin manager](https://github.com/badvectors/PluginManager).
+
+Alternatively:
 1. Download the plugin [here](https://github.com/badvectors/DiscordPlugin/releases).
 2. **Right click on the zip file and select "Properties" and then "Unblock".**
 3. Unzip the file and copy to the base vatSys plugins directory: "[...]\Program Files (x86)\vatSys\bin\Plugins".
