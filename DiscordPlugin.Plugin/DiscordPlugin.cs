@@ -23,7 +23,7 @@ namespace DiscordPlugin.Plugin
         public string Name => "Discord";
         public static string DisplayName => "Discord";
 
-        private static readonly Version Version = new Version(1, 3);
+        private static readonly Version Version = new Version(1, 4);
         private static string FileName => Path.Combine(AssemblyDirectory, "Discord.json");
         private static readonly string VersionUrl = "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
 

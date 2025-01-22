@@ -13,7 +13,7 @@ namespace DiscordPlugin.Plugin
     {
         private Task _httpListenTask;
         private CancellationToken _cancellationToken;
-        private int _listenPort;
+        private readonly int _listenPort;
 
         public HttpServer(int port, CancellationToken token)
         {
@@ -25,19 +25,23 @@ namespace DiscordPlugin.Plugin
 
         private void StartHttpListener()
         {
-            _httpListenTask = new Task(() => HttpListen(), _cancellationToken, TaskCreationOptions.LongRunning);
-            _httpListenTask.Start();
+            try
+            {
+                _httpListenTask = new Task(() => HttpListen(), _cancellationToken, TaskCreationOptions.LongRunning);
+                _httpListenTask.Start();
+            }
+            catch { }
         }
 
         private async void HttpListen()
         {
-            var listener = new TcpListener(IPAddress.Any, _listenPort);
-            listener.Start();
-
-            _cancellationToken.Register(() => listener.Stop());
-
             try
             {
+                var listener = new TcpListener(IPAddress.Any, _listenPort);
+                listener.Start();
+
+                _cancellationToken.Register(() => listener.Stop());
+
                 while (!_cancellationToken.IsCancellationRequested)
                 {
                     var client = await listener.AcceptTcpClientAsync();
@@ -98,15 +102,6 @@ namespace DiscordPlugin.Plugin
         {
             var response = new StringBuilder();
             response.Append("HTTP/1.0 500 Bad Request" + Environment.NewLine);
-            response.Append(Environment.NewLine);
-
-            await SendResponse(client, stream, response);
-        }
-
-        private async Task NotFoundResponse(TcpClient client, NetworkStream stream)
-        {
-            var response = new StringBuilder();
-            response.Append("HTTP/1.0 401 Not Found" + Environment.NewLine);
             response.Append(Environment.NewLine);
 
             await SendResponse(client, stream, response);
